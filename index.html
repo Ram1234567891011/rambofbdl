@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>FB Fetch & Downloader — Pro</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+<div class="brand">
+<div class="logo">📥</div>
+<div>
+<h1>FB Fetch & Downloader</h1>
+<p class="sub">Fetch → copy SD/HD → download</p>
+</div>
+</div>
+<div class="controls">
+<button id="themeToggle" class="ghost">Dark</button>
+</div>
+</header>
+<main class="card">
+<div class="form-row">
+<input id="inputLink" placeholder="Paste Facebook share/video link here" />
+<button id="fetchBtn" class="primary">Fetch Info</button>
+</div>
+<div id="fetchLoader" class="fetch-loader hidden">
+<div class="spinner"></div>
+<span>Fetching video info…</span>
+</div>
+<section id="result" class="result hidden">
+<div class="meta">
+<img id="thumb" class="thumb" src="" alt="thumbnail" />
+<div class="meta-text">
+<h2 id="title">Title</h2>
+<p id="note" class="note">Fetched info will appear here</p>
+</div>
+</div>
+<div class="qualities">
+<div class="quality sd quality-card">
+<div class="quality-head">
+<strong>SD</strong><span id="sdStatus" class="status"></span>
+</div>
+<input id="sdInput" readonly />
+<div class="btn-row">
+<button id="sdCopy" class="copy">Copy URL</button>
+<button id="sdDownload" class="download">Download</button>
+</div>
+</div>
+<div class="quality hd quality-card">
+<div class="quality-head">
+<strong>HD</strong><span id="hdStatus" class="status"></span>
+</div>
+<input id="hdInput" readonly />
+<div class="btn-row">
+<button id="hdCopy" class="copy">Copy URL</button>
+<button id="hdDownload" class="download">Download</button>
+</div>
+</div>
+</div>
+<div class="progress-area hidden" id="progressArea">
+<div class="progress-bar-bg">
+<div class="progress-bar" id="progressBar"></div>
+</div>
+<div class="progress-info">
+<span id="progressPercent">0%</span>
+</div>
+</div>
+</section>
+</main>
+</div>
+<script src="script.js" type="module"></script>
+</body>
+</html>
