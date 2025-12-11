@@ -82,7 +82,7 @@ app.listen(3000, () => console.log("✔ Backend running on port 3000"));
 */
 
 
-// server.js (ES module)
+// backend/server.js
 import express from "express";
 import cors from "cors";
 import getFBInfo from "@xaviabot/fb-downloader";
@@ -97,13 +97,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve static files (HTML, CSS, JS) from repo root
-app.use(express.static(path.join(__dirname)));
+//////// add
 
-// Homepage (useful for SPA or direct index.html)
+// Serve static files (HTML, CSS, JS) from repo root
+app.use(express.static(__dirname));
+
+// Homepage
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
+
+/////// add
 
 // Fetch FB video info
 app.post("/api/fetch", async (req, res) => {
@@ -111,7 +115,13 @@ app.post("/api/fetch", async (req, res) => {
   if (!url) return res.json({ success: false, error: "No URL provided." });
 
   try {
-    const result = await getFBInfo(url);
+    // Some FB extractor libs expect a full URL; ensure trimming
+    const result = await getFBInfo(String(url).trim());
+    // validate result shape
+    if (!result || (!result.sd && !result.hd && !result.title)) {
+      return res.json({ success: false, error: "No video info found." });
+    }
+
     res.json({
       success: true,
       title: result.title || "video",
@@ -120,7 +130,8 @@ app.post("/api/fetch", async (req, res) => {
       hd: result.hd || null
     });
   } catch (err) {
-    console.error("Fetch error:", err);
+    console.error("Fetch error:", err?.message || err);
+    // return useful message to client but not full stack
     res.json({ success: false, error: err?.message || "Fetch failed." });
   }
 });
@@ -136,9 +147,11 @@ app.get("/api/download", async (req, res) => {
       method: "GET",
       responseType: "stream",
       headers: {
-        // optional: set a user-agent to reduce chance of blocking
+        // helps avoid some blocking
         "User-Agent": "Mozilla/5.0 (compatible; Node.js server)"
       },
+      // timeout can help avoid hanging requests
+      timeout: 30000
     });
 
     res.setHeader("Content-Disposition", `attachment; filename="${filename || "video.mp4"}"`);
@@ -152,5 +165,5 @@ app.get("/api/download", async (req, res) => {
 });
 
 // Use Render or environment port if provided
-const PORT = process.env.PORT || 10000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`✔ Backend running on port ${PORT}`));
