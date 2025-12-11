@@ -14,6 +14,22 @@ app.use(cors());
 app.use(express.json());
 
 
+//////// add
+
+
+// Serve static files (HTML, CSS, JS) from root folder
+app.use(express.static(__dirname));
+
+// Homepage
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
+
+/////// add
+
+
+
+
 // Fetch FB video info
 app.post("/api/fetch", async (req, res) => {
 const { url } = req.body;
