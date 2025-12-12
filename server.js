@@ -122,7 +122,7 @@ app.get("/api/download", async (req, res) => {
 });
 
 // fallback serve index.html
-app.get("*", (req, res) => {
+app.get("(.*)", (req, res) => {
   if (req.path.startsWith("/api/")) return res.status(404).send("Not found");
   res.sendFile(path.join(staticFolder, "index.html"));
 });
