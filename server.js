@@ -69,12 +69,13 @@ app.listen(3000, () => console.log("✔ Backend running on port 3000"));
 */
 
 
+// server.js (minimal Replit-ready)
 import express from "express";
 import cors from "cors";
-import getFBInfo from "@xaviabot/fb-downloader";
-import axios from "axios";
 import path from "path";
 import { fileURLToPath } from "url";
+import getFBInfo from "@xaviabot/fb-downloader";
+import axios from "axios";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -83,11 +84,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// SERVE STATIC FROM THE SAME FOLDER AS server.js (where index.html is)
-const staticFolder = __dirname; // <-- serve current directory
+// serve static from same dir as server.js
+const staticFolder = __dirname;
 app.use(express.static(staticFolder));
 
-// API routes...
+// API routes (same as you had)
 app.post("/api/fetch", async (req, res) => {
   const { url } = req.body;
   if (!url) return res.json({ success: false, error: "No URL provided." });
@@ -120,11 +121,11 @@ app.get("/api/download", async (req, res) => {
   }
 });
 
-// SPA fallback (serve index.html for non-API routes)
+// fallback serve index.html
 app.get("*", (req, res) => {
   if (req.path.startsWith("/api/")) return res.status(404).send("Not found");
   res.sendFile(path.join(staticFolder, "index.html"));
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`✔ Backend running on port ${PORT}`));
+app.listen(PORT, "0.0.0.0", () => console.log(`✔ Server running on port ${PORT}`));
