@@ -160,6 +160,7 @@ app.use(express.json());
 const staticFolder = __dirname;
 app.use(express.static(staticFolder));
 
+/*
 // API: fetch FB video info
 app.post("/api/fetch", async (req, res) => {
   const { url } = req.body;
@@ -178,6 +179,31 @@ app.post("/api/fetch", async (req, res) => {
     res.json({ success: false, error: err?.message || "Fetch failed." });
   }
 });
+*/
+app.post("/api/fetch", async (req, res) => {
+  const { url } = req.body;
+  if (!url) return res.status(400).json({ success: false, error: "No URL provided." });
+
+  try {
+    const result = await getFBInfo(url);
+    res.json({
+      success: true,
+      title: result.title || "video",
+      thumbnail: result.thumbnail || "",
+      sd: result.sd || null,
+      hd: result.hd || null
+    });
+  } catch (err) {
+    // more verbose logging for debugging
+    console.error("Fetch error:", err);
+    const msg = err?.message || "Fetch failed";
+    // return status 500 so client sees it's server error, include message and (optionally) stack
+    res.status(500).json({ success: false, error: msg, stack: err?.stack });
+  }
+});
+
+
+
 
 // API: download proxy
 app.get("/api/download", async (req, res) => {
