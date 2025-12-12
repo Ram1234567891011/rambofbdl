@@ -122,10 +122,17 @@ app.get("/api/download", async (req, res) => {
 });
 
 // fallback serve index.html
-app.get("/:path(.*)", (req, res) => {
+/*app.get("/:path(.*)", (req, res) => {
   if (req.path.startsWith("/api/")) return res.status(404).send("Not found");
   res.sendFile(path.join(staticFolder, "index.html"));
+});*/
+
+// Serve index.html fallback (Express 5 / Node 22 compatible)
+app.get('/:path(.*)', (req, res) => {
+  if (req.path.startsWith('/api/')) return res.status(404).send('Not found');
+  res.sendFile(path.join(staticFolder, 'index.html'));
 });
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, "0.0.0.0", () => console.log(`✔ Server running on port ${PORT}`));
